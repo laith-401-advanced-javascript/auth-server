@@ -18,14 +18,14 @@ router.get('/users', getUsers);
  * @param {*} next 
  */
 function signupHandler(req, res, next) {
-  Users.create(req.body).then(async(user) => {
-    const token = await Users.generateToken(user);
-    res.status(200).json({ token });
-  })
-    .catch((err) => {
-      console.log('Wrong!!');
-      res.status(403).send(err.message);
-    });
+    Users.create(req.body).then(async(user) => {
+            const token = await Users.generateToken(user);
+            res.status(200).json({ token });
+        })
+        .catch((err) => {
+            console.log('Wrong!!');
+            res.status(403).send(err.message);
+        });
 }
 
 
@@ -37,9 +37,14 @@ function signupHandler(req, res, next) {
  */
 
 function signinHandler(req, res, next) {
-  try {
-    res.json({ token: req.token, username: req.username });
-  } catch (e) { res.status(403).json('Invalid credentials'); }
+    try {
+        console.log('>>>>>', req.token);
+        // add the token as cookie 
+        res.cookie('token', req.token);
+        // add a header
+        res.set('token', req.token);
+        res.json({ token: req.token, username: req.username });
+    } catch (e) { res.status(403).json('Invalid credentials'); }
 
 }
 
@@ -51,8 +56,8 @@ function signinHandler(req, res, next) {
  * @returns {Error} 500 - unexpected error
  */
 async function getUsers(req, res) {
-  let allUser = await Users.list();
-  res.status(200).json(allUser);
+    let allUser = await Users.list();
+    res.status(200).json(allUser);
 
 }
 
