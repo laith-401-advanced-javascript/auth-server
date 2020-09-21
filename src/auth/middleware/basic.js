@@ -17,7 +17,9 @@ module.exports = (req, res, next) => {
         // 1st decode auth[1] -> then split it on :
         let [user, pass] = base64.decode(basic[1]).split(':');
         users.authenticate(user, pass).then(valid => {
-
+            if (!valid) {
+                return next('Wrong pass or username')
+            }
             return users.generateToken(valid);
         }).then(token => {
             req.token = token;
