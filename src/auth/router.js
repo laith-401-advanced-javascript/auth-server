@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const { token } = require('morgan');
+// const { token } = require('morgan');
 const basicAuth = require('./middleware/basic');
 const bearerMiddleware = require('./middleware/bearer-auth');
 
@@ -24,24 +24,24 @@ router.get('/secret', bearerMiddleware, getSecret);
  */
 async function signupHandler(req, res, next) {
 
-    let user = new users(req.body);
-    let isUserExist = await users.findOne({ username: user.username })
-        // console.log('isUserExist', isUserExist);
-    if (isUserExist) { // to check if the user is already exist and signup 
-        res.status(403).send("user is already exist");
-        return;
-    }
+  let user = new users(req.body);
+  let isUserExist = await users.findOne({ username: user.username });
+  // console.log('isUserExist', isUserExist);
+  if (isUserExist) { // to check if the user is already exist and signup 
+    res.status(403).send('user is already exist');
+    return;
+  }
 
-    Users.create(req.body).then(async(user) => {
-            const token = await Users.generateToken(user);
-            res.status(200).json({ token });
-            console.log('req.tok', token);
+  Users.create(req.body).then(async(user) => {
+    const token = await Users.generateToken(user);
+    res.status(200).json({ token });
+    console.log('req.tok', token);
 
-        })
-        .catch((err) => {
-            console.log('Wrong!!');
-            res.status(403).send(err.message);
-        });
+  })
+    .catch((err) => {
+      console.log('Wrong!!');
+      res.status(403).send(err.message);
+    });
 
 }
 
@@ -54,10 +54,10 @@ async function signupHandler(req, res, next) {
  */
 
 function signinHandler(req, res, next) {
-    try {
-        res.json({ token: req.token, username: req.username });
+  try {
+    res.json({ token: req.token, username: req.username });
 
-    } catch (e) { res.status(403).json('Invalid credentials'); }
+  } catch (e) { res.status(403).json('Invalid credentials'); }
 
 }
 
@@ -69,14 +69,14 @@ function signinHandler(req, res, next) {
  * @returns {Error} 500 - unexpected error
  */
 async function getUsers(req, res) {
-    let allUser = await Users.list();
-    res.status(200).json(allUser);
+  let allUser = await Users.list();
+  res.status(200).json(allUser);
 
 }
 
 function getSecret(req, res) {
 
-    res.status(200).send(req.token);
+  res.status(200).send(req.token);
 }
 
 module.exports = router;

@@ -21,8 +21,8 @@ app.use(express.static('./public'));
 
 // Routes
 app.get('/oauth', oauth, (req, res) => {
-    console.log('reqqqqq', req.token);
-    res.status(200).send(req.token);
+  console.log('reqqqqq', req.token);
+  res.status(200).send(req.token);
 });
 
 // app.get('/secret', bearerAuth, (req, res) => {
@@ -35,9 +35,9 @@ app.use('*', notFound);
 app.use(serverError);
 
 module.exports = {
-    server: app,
-    start: port => {
-        let PORT = port || process.env.PORT || 3000;
-        app.listen(PORT, () => console.log(` Listining on ${PORT} `));
-    },
+  server: app,
+  start: port => {
+    let PORT = port || process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(` Listining on ${PORT} `));
+  },
 };
