@@ -3,6 +3,8 @@
 const express = require('express');
 const { token } = require('morgan');
 const basicAuth = require('./middleware/basic');
+const bearerMiddleware = require('./middleware/bearer-auth');
+
 const Users = require('./models/users-model.js');
 const users = require('./models/users-schema');
 
@@ -12,7 +14,7 @@ const router = express.Router();
 router.post('/signup', signupHandler);
 router.post('/signin', basicAuth, signinHandler);
 router.get('/users', getUsers);
-
+router.get('/secret', bearerMiddleware, getSecret);
 
 /**
  * this function response the token to the user if it is not exist
@@ -54,6 +56,7 @@ async function signupHandler(req, res, next) {
 function signinHandler(req, res, next) {
     try {
         res.json({ token: req.token, username: req.username });
+
     } catch (e) { res.status(403).json('Invalid credentials'); }
 
 }
@@ -71,5 +74,9 @@ async function getUsers(req, res) {
 
 }
 
+function getSecret(req, res) {
+
+    res.status(200).send(req.token);
+}
 
 module.exports = router;

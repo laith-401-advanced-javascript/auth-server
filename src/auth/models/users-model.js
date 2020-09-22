@@ -20,15 +20,21 @@ class User {
 
 
     async generateToken(record) {
+        let recording = {
+            username: record.username,
+            password: record.password
+        }
+        let token = await jwt.sign({ record }, SECRET);
+        console.log('ttttttttttt', recording);
+        console.log('username: record.username', record);
 
-        let token = await jwt.sign({ username: record.username }, SECRET);
-        // console.log('ttttttttttt', token);
         return { token, record };
     }
 
     async authenticate(username, password) {
         // to check the username if exist in the database or not 
         let user = await this.schema.find({ username: username });
+        console.log('userrrrrr', user);
         try {
             const valid = await bcrypt.compare(password, user[0].password);
             return valid ? user : Promise.reject('Password not correct');
@@ -36,6 +42,31 @@ class User {
             console.log(e.message);
         }
     }
+
+    async authenticateToken(token) {
+        try {
+            let tokenObject = jwt.verify(token, SECRET);
+            console.log('tttttoooken', token);
+            let result = await this.schema.find({ username: tokenObject.username });
+
+            console.log("result -----> ", result);
+            console.log("tokenObject usename-----> ", tokenObject);
+
+
+            if (tokenObject) {
+                return Promise.resolve({ tokenObject: tokenObject });
+
+            } else {
+                return Promise.reject('user is not found');
+            }
+
+        } catch (e) {
+            console.log('catch  rejjjjjjj');
+            return Promise.reject();
+        }
+
+    }
+
 
     async list() {
         let allUsers = await this.schema.find({});

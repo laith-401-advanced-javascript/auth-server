@@ -25,6 +25,11 @@ app.get('/oauth', oauth, (req, res) => {
     res.status(200).send(req.token);
 });
 
+// app.get('/secret', bearerAuth, (req, res) => {
+//     console.log('reqqqqq', req.token);
+//     res.status(200).send(req.token);
+// });
+
 
 app.use('*', notFound);
 app.use(serverError);
