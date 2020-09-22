@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
     // Basic YWhtYWRfc2hlbGEgOjEyMzQ=
     console.log('req.headers', req.headers);
     let basic = req.headers.authorization.split(' ');
-    if (basic[0] == 'Basic') {
+    if (basic[0] == 'Basic') { // to check if the first word is Basic  in (Basic YWhtYWRfc2hlbGEgOjEyMzQ=)
         //take the basic[1]: YWhtYWRfc2hlbGEgOjEyMzQ=
         // after decode ahmad_shela:1234
         // 1st decode auth[1] -> then split it on :
