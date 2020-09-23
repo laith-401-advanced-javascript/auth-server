@@ -5,6 +5,7 @@ Home         | [Home](https://github.com/laith-401-advanced-javascript/auth-serv
  class-11    | [class-11](https://github.com/laith-401-advanced-javascript/auth-server/pull/1)
   class-12    | [class-12](https://github.com/laith-401-advanced-javascript/auth-server/pull/2)
  class-13    | [class-13](https://github.com/laith-401-advanced-javascript/auth-server/pull/3)
+  class-14    | [class-14](https://github.com/laith-401-advanced-javascript/auth-server/pull/4)
 
 
 # class - 1
@@ -59,11 +60,14 @@ linkedIn :https://www.linkedin.com/in/laith-aldaree/
 
 # uml
 
-lab 1
+lab 11
 ![](assets/lab1uml.jpg)
 
-lab 2
+lab 12
 ![](assets/auth2.jpg)
 
-lab 3
+lab 33
 ![](assets/auth3.jpg)
+
+lab 14
+![](assets/auth4.jpg)

@@ -8,6 +8,7 @@ describe('basic auth server', () => {
   const signinObj = {
     username: 'laith',
     password: '123',
+
   };
 
   const signinObj2 = {

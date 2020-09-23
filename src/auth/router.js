@@ -1,9 +1,9 @@
 'use strict';
 
 const express = require('express');
-// const { token } = require('morgan');
 const basicAuth = require('./middleware/basic');
-const bearerMiddleware = require('./middleware/bearer-auth');
+const bearerAuth = require('./middleware/bearer-auth');
+const permissions = require('./middleware/acl-middleware.js');
 
 const Users = require('./models/users-model.js');
 const users = require('./models/users-schema');
@@ -14,7 +14,25 @@ const router = express.Router();
 router.post('/signup', signupHandler);
 router.post('/signin', basicAuth, signinHandler);
 router.get('/users', getUsers);
-router.get('/secret', bearerMiddleware, getSecret);
+router.get('/secret', bearerAuth, getSecret);
+
+
+router.get('/read', bearerAuth, permissions('read'), (req, res) => {
+  res.status(200).send('user get !! !!!! ');
+
+});
+router.post('/add', bearerAuth, permissions('create'), (req, res) => {
+  res.status(200).send('user-submission !!!! ');
+
+});
+router.put('/change', bearerAuth, permissions('update'), (req, res) => {
+  res.status(200).send('put user !!!! ');
+
+});
+router.delete('/remove', bearerAuth, permissions('delete'), (req, res) => {
+  res.status(200).send('DELETED !!!! ');
+
+});
 
 /**
  * this function response the token to the user if it is not exist
@@ -76,7 +94,7 @@ async function getUsers(req, res) {
 
 function getSecret(req, res) {
 
-  res.status(200).send(req.token);
+  res.status(200).send(req.user);
 }
 
 module.exports = router;

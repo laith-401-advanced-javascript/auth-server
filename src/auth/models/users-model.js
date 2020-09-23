@@ -15,26 +15,17 @@ class User {
     // await this.schema.find({ username: user.username });
     let newUser = new this.schema(user);
     return await newUser.save();
-
   }
 
-
   async generateToken(record) {
-    let recording = {
-      username: record.username,
-      password: record.password,
-    };
-    let token = await jwt.sign({ record }, SECRET);
-    console.log('ttttttttttt', recording);
-    console.log('username: record.username', record);
 
+    let token = await jwt.sign({ record }, SECRET);
     return { token, record };
   }
 
   async authenticate(username, password) {
     // to check the username if exist in the database or not 
     let user = await this.schema.find({ username: username });
-    console.log('userrrrrr', user);
     try {
       const valid = await bcrypt.compare(password, user[0].password);
       return valid ? user : Promise.reject('Password not correct');
@@ -46,18 +37,14 @@ class User {
   async authenticateToken(token) {
     try {
       let tokenObject = jwt.verify(token, SECRET);
-      console.log('tttttoooken', token);
-      let result = await this.schema.find({ username: tokenObject.username });
 
-      console.log('result -----> ', result);
-      console.log('tokenObject usename-----> ', tokenObject);
+      // console.log('tokenObject usename-----> ', tokenObject);
 
-
-      if (tokenObject) {
-        return Promise.resolve({ tokenObject: tokenObject });
-
+      if (tokenObject.record[0].username) {
+        // console.log('tokenObject.record[0].username', Promise.resolve(tokenObject.record[0].username));
+        return Promise.resolve(tokenObject.record);
       } else {
-        return Promise.reject('user is not found');
+        return Promise.reject();
       }
 
     } catch (e) {
@@ -73,6 +60,54 @@ class User {
     return allUsers;
   }
 
+
+  rolesUsers(role, ability) {
+
+    let user = ['read'];
+    let editor = ['read', 'create', 'update'];
+    let admin = ['read', 'read-submisi', 'create', 'update', 'delete'];
+    let writer = ['read', 'create'];
+
+    if (role == 'user') {
+      for (let i = 0; i < user.length; i++) {
+        // if the ability found in the user array return true
+        if (user[i] == ability) {
+          return true;
+        }
+
+      }
+    }
+
+    if (role == 'editor') {
+      for (let i = 0; i < editor.length; i++) {
+        if (editor[i] == ability) {
+          return true;
+        }
+
+      }
+    }
+
+    if (role == 'admin') {
+      for (let i = 0; i < admin.length; i++) {
+        if (admin[i] == ability) {
+          return true;
+        }
+
+      }
+    }
+
+    if (role == 'writer') {
+      for (let i = 0; i < writer.length; i++) {
+        if (writer[i] == ability) {
+          return true;
+        }
+
+      }
+    }
+
+
+
+  }
 }
 
 
