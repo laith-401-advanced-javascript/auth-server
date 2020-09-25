@@ -88,6 +88,7 @@ async function getRemoteUserInfo(token) {
  * function that take a remoteUser as a paremeter to get the users data
  * @param {*} remoteUser 
  */
+
 async function getUser(remoteUser) {
   let Record = {
     username: remoteUser.login,
