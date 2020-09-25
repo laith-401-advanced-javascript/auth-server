@@ -20,7 +20,9 @@ class User {
 
 
   async generateToken(record) {
+
     let token = await jwt.sign({ username: record.username }, SECRET);
+    // console.log('ttttttttttt', token);
     return { token, record };
   }
 

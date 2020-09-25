@@ -1,8 +1,11 @@
 'use strict';
 
 const express = require('express');
+// const { token } = require('morgan');
 const basicAuth = require('./middleware/basic');
 const Users = require('./models/users-model.js');
+const users = require('./models/users-schema');
+
 const router = express.Router();
 
 
@@ -17,15 +20,27 @@ router.get('/users', getUsers);
  * @param {*} res 
  * @param {*} next 
  */
-function signupHandler(req, res, next) {
+async function signupHandler(req, res, next) {
+
+  let user = new users(req.body);
+  let isUserExist = await users.findOne({ username: user.username });
+  // console.log('isUserExist', isUserExist);
+  if (isUserExist) { // to check if the user is already exist and signup 
+    res.status(403).send('user is already exist');
+    return;
+  }
+
   Users.create(req.body).then(async(user) => {
     const token = await Users.generateToken(user);
     res.status(200).json({ token });
+    console.log('req.tok', token);
+
   })
     .catch((err) => {
       console.log('Wrong!!');
       res.status(403).send(err.message);
     });
+
 }
 
 
