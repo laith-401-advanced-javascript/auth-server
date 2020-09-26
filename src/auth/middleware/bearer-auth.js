@@ -9,14 +9,12 @@ module.exports = (req, res, next) => {
   }
 
   let bearer = req.headers.authorization.split(' ');
-  // console.log('bearerrrrrrrrr', bearer);
   if (bearer[0] == 'Bearer') {
     const token = bearer[1];
 
     Users.authenticateToken(token).then(validUser => {
-      // console.log('tototototo', validUser);
-
       req.user = { validUser, token };
+      console.log('-_-_-_-_',req.user);
       next();
     }).catch(err => next('invalid Token !'));
   } else {

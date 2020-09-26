@@ -14,16 +14,12 @@ module.exports = (req, res, next) => {
     users.authenticate(user, pass)
       .then(valid => {
         req.user = valid;
-        // console.log('vvvvvvv', valid);
         if (!valid) {
           return next('Wrong pass or username');
         }
-        // console.log('vvvvvvvaaaaaaaaallll', valid);
         return users.generateToken(valid);
       }).then(token => {
-        console.log('req.token', token);
         req.token = token;
-        console.log('req.user', user);
 
         next();
 

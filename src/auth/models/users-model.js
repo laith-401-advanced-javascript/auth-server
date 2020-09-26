@@ -15,6 +15,7 @@ class User {
     // await this.schema.find({ username: user.username });
     let newUser = new this.schema(user);
     return await newUser.save();
+
   }
 
   async generateToken(record) {
@@ -38,11 +39,11 @@ class User {
     try {
       let tokenObject = jwt.verify(token, SECRET);
 
-      // console.log('tokenObject usename-----> ', tokenObject);
+      console.log('tokenObject usename-----> ', tokenObject);
 
-      if (tokenObject.record[0].username) {
+      if (tokenObject) {
         // console.log('tokenObject.record[0].username', Promise.resolve(tokenObject.record[0].username));
-        return Promise.resolve(tokenObject.record);
+        return Promise.resolve(tokenObject);
       } else {
         return Promise.reject();
       }
@@ -104,8 +105,6 @@ class User {
 
       }
     }
-
-
 
   }
 }

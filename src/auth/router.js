@@ -44,7 +44,6 @@ async function signupHandler(req, res, next) {
 
   let user = new users(req.body);
   let isUserExist = await users.findOne({ username: user.username });
-  // console.log('isUserExist', isUserExist);
   if (isUserExist) { // to check if the user is already exist and signup 
     res.status(403).send('user is already exist');
     return;
@@ -53,7 +52,6 @@ async function signupHandler(req, res, next) {
   Users.create(req.body).then(async(user) => {
     const token = await Users.generateToken(user);
     res.status(200).json({ token });
-    console.log('req.tok', token);
 
   })
     .catch((err) => {
