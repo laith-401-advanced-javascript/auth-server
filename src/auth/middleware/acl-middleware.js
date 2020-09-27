@@ -3,7 +3,7 @@ const users = require('../models/users-model.js');
 
 module.exports = (action) => {
   return (req, res, next) => {
-    console.log('=====>',req.user);
+    console.log('=====>>>>>>',req.user.validUser);
     try {
       if (users.rolesUsers(req.user.validUser.record[0].role, action)) {
         next();
@@ -13,6 +13,7 @@ module.exports = (action) => {
         res.send('Access Denied! ');
       }
     } catch (e) {
+      console.log('invalid Catch');
       next('Invalid!');
     }
   };

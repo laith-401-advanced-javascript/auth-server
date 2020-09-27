@@ -16,17 +16,17 @@ describe('acl', () => {
   };
 
 
-  it('can allow a new user to sign up', async() => {
+  it('can allow a new user to sign up', async () => {
     const signupResponse = await agent.post('/signup').send(signUpObj);
     expect(signupResponse.status).toBe(200);
   });
 
 
-  it('can allow an existing user to sign in', async() => {
+  it('can allow an existing user to sign in', async () => {
     const authHeader = base64.encode(`${signUpObj.username}:${signUpObj.password}:${signUpObj.role}`);
 
     const signinResponse = await agent.post('/signin').set('authorization', `Basic ${authHeader}`);
-        
+
     const bearerHeader = await jwt.sign({ username: 'laith' }, 'mytokensecret');
 
     const secretResponse = await agent.get('/secret').set('authorization', `Bearer ${bearerHeader}`);
@@ -36,34 +36,72 @@ describe('acl', () => {
   });
 
 
-  //     it('Can successfully check if the user has access to /read', async() => {
-            
-  //         const authHeader = base64.encode(`${signUpObj.username}:${signUpObj.password}:${signUpObj.role}`,);
-  //         const signinResponse = await agent.post('/signin').set('authorization', `Basic ${authHeader}`);
+  it('Can successfully check if the user has access to /read', async () => {
 
-  //     const bearerHeader = await jwt.sign({ username: 'laith' }, 'mytokensecret');
-  //     const secretResponse = await agent.get('/read').set('authorization', `Bearer ${bearerHeader}`);
-  //     expect(secretResponse.statusCode).toBe(200);
-  // });
+    const authHeader = base64.encode(`${signUpObj.username}:${signUpObj.password}:${signUpObj.role}`);
+    const signinResponse = await agent.post('/signin').set('authorization', `Basic ${authHeader}`);
 
-      
+    let [user, pass, role] = base64.decode(authHeader).split(':');
+    let arr = [user, pass, role];
+    let record =[ { username: arr[0], password: arr[1], role: arr[2] }];
+    const bearerHeader = await jwt.sign({ record }, 'mytokensecret');
 
-  // it('Can successfully check if the user has access to /add', async() => {
-  //     const bearerHeader = await jwt.sign({ username: 'laith' }, 'mytokensecret');
-  //     const secretResponse = await agent.post('/add').set('authorization', `Bearer ${bearerHeader}`);
-  //     expect(secretResponse.statusCode).toBe(200);
-  // });
+    const secretResponse = await agent.get('/read').set('authorization', `Bearer ${bearerHeader}`);
 
-  // it('Can successfully check if the user has access to /change', async() => {
-  //     const bearerHeader = await jwt.sign({ username: 'laith' }, 'mytokensecret');
-  //     const secretResponse = await agent.put('/change').set('authorization', `Bearer ${bearerHeader}`);
-  //     expect(secretResponse.statusCode).toBe(200);
-  // });
+    expect(signinResponse.status).toBe(200);
+    expect(secretResponse.status).toBe(200);
+  });
 
-  // it('Can successfully check if the user has access to /remove', async() => {
-  //     const bearerHeader = await jwt.sign({ username: 'laith' }, 'mytokensecret');
-  //     const secretResponse = await agent.delete('/remove').set('authorization', `Bearer ${bearerHeader}`);
-  //     expect(secretResponse.statusCode).toBe(200);
-  // });
+
+  it('Can successfully check if the user has access to /add', async () => {
+
+    const authHeader = base64.encode(`${signUpObj.username}:${signUpObj.password}:${signUpObj.role}`);
+    const signinResponse = await agent.post('/signin').set('authorization', `Basic ${authHeader}`);
+
+    let [user, pass, role] = base64.decode(authHeader).split(':');
+    let arr = [user, pass, role];
+    let record =[ { username: arr[0], password: arr[1], role: arr[2] }];
+    const bearerHeader = await jwt.sign({ record }, 'mytokensecret');
+
+    const secretResponse = await agent.post('/add').set('authorization', `Bearer ${bearerHeader}`);
+
+    expect(signinResponse.status).toBe(200);
+    expect(secretResponse.status).toBe(200);
+  });
+
+  it('Can successfully check if the user has access to /change', async () => {
+
+    const authHeader = base64.encode(`${signUpObj.username}:${signUpObj.password}:${signUpObj.role}`);
+    const signinResponse = await agent.post('/signin').set('authorization', `Basic ${authHeader}`);
+
+    let [user, pass, role] = base64.decode(authHeader).split(':');
+    let arr = [user, pass, role];
+    let record =[ { username: arr[0], password: arr[1], role: arr[2] }];
+    const bearerHeader = await jwt.sign({ record }, 'mytokensecret');
+
+    const secretResponse = await agent.put('/change').set('authorization', `Bearer ${bearerHeader}`);
+
+    expect(signinResponse.status).toBe(200);
+    expect(secretResponse.status).toBe(200);
+  });
+
+
+  it('Can successfully check if the user has access to /remove', async () => {
+
+    const authHeader = base64.encode(`${signUpObj.username}:${signUpObj.password}:${signUpObj.role}`);
+    const signinResponse = await agent.post('/signin').set('authorization', `Basic ${authHeader}`);
+
+    let [user, pass, role] = base64.decode(authHeader).split(':');
+    let arr = [user, pass, role];
+    let record =[ { username: arr[0], password: arr[1], role: arr[2] }];
+    const bearerHeader = await jwt.sign({ record }, 'mytokensecret');
+
+    const secretResponse = await agent.delete('/remove').set('authorization', `Bearer ${bearerHeader}`);
+
+    expect(signinResponse.status).toBe(200);
+    expect(secretResponse.status).toBe(200);
+  });
+
+
 
 });

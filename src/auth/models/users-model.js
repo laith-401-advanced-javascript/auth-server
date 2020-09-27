@@ -39,17 +39,13 @@ class User {
     try {
       let tokenObject = jwt.verify(token, SECRET);
 
-      console.log('tokenObject usename-----> ', tokenObject);
-
       if (tokenObject) {
-        // console.log('tokenObject.record[0].username', Promise.resolve(tokenObject.record[0].username));
         return Promise.resolve(tokenObject);
       } else {
         return Promise.reject();
       }
 
     } catch (e) {
-      console.log('catch  rejjjjjjj');
       return Promise.reject();
     }
 

@@ -14,7 +14,6 @@ module.exports = (req, res, next) => {
 
     Users.authenticateToken(token).then(validUser => {
       req.user = { validUser, token };
-      console.log('-_-_-_-_',req.user);
       next();
     }).catch(err => next('invalid Token !'));
   } else {
