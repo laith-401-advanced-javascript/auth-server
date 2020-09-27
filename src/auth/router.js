@@ -2,14 +2,37 @@
 
 const express = require('express');
 const basicAuth = require('./middleware/basic');
+const bearerAuth = require('./middleware/bearer-auth');
+const permissions = require('./middleware/acl-middleware.js');
+
 const Users = require('./models/users-model.js');
+const users = require('./models/users-schema');
+
 const router = express.Router();
 
 
 router.post('/signup', signupHandler);
 router.post('/signin', basicAuth, signinHandler);
 router.get('/users', getUsers);
+router.get('/secret', bearerAuth, getSecret);
 
+
+router.get('/read', bearerAuth, permissions('read'), (req, res) => {
+  res.status(200).send('user get !! !!!! ');
+
+});
+router.post('/add', bearerAuth, permissions('create'), (req, res) => {
+  res.status(200).send('user-submission !!!! ');
+
+});
+router.put('/change', bearerAuth, permissions('update'), (req, res) => {
+  res.status(200).send('put user !!!! ');
+
+});
+router.delete('/remove', bearerAuth, permissions('delete'), (req, res) => {
+  res.status(200).send('DELETED !!!! ');
+
+});
 
 /**
  * this function response the token to the user if it is not exist
@@ -17,15 +40,25 @@ router.get('/users', getUsers);
  * @param {*} res 
  * @param {*} next 
  */
-function signupHandler(req, res, next) {
+async function signupHandler(req, res, next) {
+
+  let user = new users(req.body);
+  let isUserExist = await users.findOne({ username: user.username });
+  if (isUserExist) { // to check if the user is already exist and signup 
+    res.status(403).send('user is already exist');
+    return;
+  }
+
   Users.create(req.body).then(async(user) => {
     const token = await Users.generateToken(user);
     res.status(200).json({ token });
+
   })
     .catch((err) => {
       console.log('Wrong!!');
       res.status(403).send(err.message);
     });
+
 }
 
 
@@ -39,6 +72,7 @@ function signupHandler(req, res, next) {
 function signinHandler(req, res, next) {
   try {
     res.json({ token: req.token, username: req.username });
+
   } catch (e) { res.status(403).json('Invalid credentials'); }
 
 }
@@ -56,5 +90,9 @@ async function getUsers(req, res) {
 
 }
 
+function getSecret(req, res) {
+
+  res.status(200).send(req.user);
+}
 
 module.exports = router;

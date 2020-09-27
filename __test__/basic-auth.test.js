@@ -8,10 +8,11 @@ describe('basic auth server', () => {
   const signinObj = {
     username: 'laith',
     password: '123',
+
   };
 
   const signinObj2 = {
-    username: 'soso',
+    username: 'abuNashme',
     password: 'good',
   };
 
@@ -85,7 +86,7 @@ describe('basic auth server', () => {
       .set('authorization', `Basic ${autHeader}`);
     expect(getResponse.status).toEqual(200);
     expect(getResponse.body[0].username).toEqual('laith');
-    expect(getResponse.body[1].username).toEqual('soso');
+    expect(getResponse.body[1].username).toEqual('abuNashme');
   });
 
   it('will return a 200 and an array of objects when called get users', async() => {

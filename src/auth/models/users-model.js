@@ -18,9 +18,9 @@ class User {
 
   }
 
-
   async generateToken(record) {
-    let token = await jwt.sign({ username: record.username }, SECRET);
+
+    let token = await jwt.sign({ record }, SECRET);
     return { token, record };
   }
 
@@ -35,11 +35,74 @@ class User {
     }
   }
 
+  async authenticateToken(token) {
+    try {
+      let tokenObject = jwt.verify(token, SECRET);
+
+      if (tokenObject) {
+        return Promise.resolve(tokenObject);
+      } else {
+        return Promise.reject();
+      }
+
+    } catch (e) {
+      return Promise.reject();
+    }
+
+  }
+
+
   async list() {
     let allUsers = await this.schema.find({});
     return allUsers;
   }
 
+
+  rolesUsers(role, ability) {
+
+    let user = ['read'];
+    let editor = ['read', 'create', 'update'];
+    let admin = ['read', 'read-submisi', 'create', 'update', 'delete'];
+    let writer = ['read', 'create'];
+
+    if (role == 'user') {
+      for (let i = 0; i < user.length; i++) {
+        // if the ability found in the user array return true
+        if (user[i] == ability) {
+          return true;
+        }
+
+      }
+    }
+
+    if (role == 'editor') {
+      for (let i = 0; i < editor.length; i++) {
+        if (editor[i] == ability) {
+          return true;
+        }
+
+      }
+    }
+
+    if (role == 'admin') {
+      for (let i = 0; i < admin.length; i++) {
+        if (admin[i] == ability) {
+          return true;
+        }
+
+      }
+    }
+
+    if (role == 'writer') {
+      for (let i = 0; i < writer.length; i++) {
+        if (writer[i] == ability) {
+          return true;
+        }
+
+      }
+    }
+
+  }
 }
 
 
